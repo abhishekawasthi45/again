@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tendril & Twine — Handmade Velvet Bouquets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,560;0,9..144,650;1,9..144,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<!-- Razorpay's official checkout script — loaded once, used for every payment -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#home" class="brand"><span class="dot"></span>Tendril &amp; Twine</a>
+    <div class="nav-right">
+      <a href="#home" class="js-whatsapp-support" style="font-size:13.5px; font-weight:600; color:var(--plum-2);" target="_blank" rel="noopener">Need help?</a>
+      <button class="cart-btn" id="cartTrigger">Cart <span id="cartCount">0</span></button>
+    </div>
+  </nav>
+</header>
+
+<div class="perk-banner">🌷 Every bouquet comes with a complimentary crochet gift &nbsp;·&nbsp; First order? Use <strong>WELCOME10</strong> for 10% off</div>
+
+<!-- ============ HOME VIEW ============ -->
+<div class="view active" id="view-home">
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">● Handmade in Delhi</div>
+        <h1>Flowers that never fade.</h1>
+        <p class="lede">Handcrafted velvet blooms, made to be gifted, cherished and kept forever. Every stem hand-twisted from soft chenille wire — no water, no wilting.</p>
+        <div class="hero-ctas">
+          <a href="#home" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" class="btn btn-primary">Shop the Collection</a>
+          <a href="#product/blush-tulip-bunch" class="btn btn-ghost">Explore Bouquets</a>
+        </div>
+      </div>
+      <div class="hero-img" style="background-image:url('images/hero/hero-bouquet.jpg')"></div>
+    </section>
+  </div>
+
+  <div class="wrap" id="shop">
+    <section>
+      <div class="section-head">
+        <div class="eyebrow" style="border-color:var(--plum-2); color:var(--plum-2)">The collection</div>
+        <h2>Hand-twisted this week</h2>
+        <p>Every order includes a free complimentary crochet gift and complimentary floral stickers with your packaging.</p>
+      </div>
+      <div class="product-grid" id="productGrid"></div>
+    </section>
+
+    <section id="faq">
+      <div class="section-head">
+        <h2>Frequently asked</h2>
+      </div>
+      <div class="faq-item"><h3>Are the flowers handmade?</h3><p>Yes — every petal is individually twisted and shaped by hand from velvet chenille wire.</p></div>
+      <div class="faq-item"><h3>How long do the flowers last?</h3><p>They're designed to be long-lasting and enjoyed for a very long time with basic care — no water or sunlight needed.</p></div>
+      <div class="faq-item"><h3>Is Cash on Delivery available?</h3><p>We currently accept prepaid orders only. COD is not available at this time.</p></div>
+      <div class="faq-item"><h3>What payment methods can I use?</h3><p>UPI, cards and net banking via our secure Razorpay checkout.</p></div>
+      <div class="faq-item"><h3>How can I contact support?</h3><p>Tap "Need help?" at the top of the page to chat with us on WhatsApp, or reach out on Instagram.</p></div>
+    </section>
+  </div>
+</div>
+
+<!-- ============ PRODUCT DETAIL VIEW ============ -->
+<div class="view" id="view-product"></div>
+
+<!-- ============ CHECKOUT VIEW ============ -->
+<div class="view" id="view-checkout">
+  <div class="wrap checkout-wrap">
+    <a href="#home" class="back-link">← Continue shopping</a>
+    <h1 style="margin-top:14px;">Checkout</h1>
+
+    <div id="checkoutEmpty" style="display:none; margin-top:30px; color:#8a8074;">Your cart is empty. <a href="#home" style="color:var(--plum-2); font-weight:600;">Go shop something lovely →</a></div>
+
+    <div id="checkoutContent">
+      <!-- LEFT: form -->
+      <div>
+        <form id="checkoutForm">
+          <div class="co-block">
+            <h3>Your details</h3>
+            <div class="field"><label>Full name</label><input id="fullName" required></div>
+            <div class="field-row">
+              <div class="field"><label>Mobile number</label><input id="mobile" type="tel" maxlength="10" required></div>
+              <div class="field"><label>Email</label><input id="email" type="email" required></div>
+            </div>
+          </div>
+
+          <div class="co-block">
+            <h3>Delivery address</h3>
+            <div class="field"><label>House/Flat, Street, Area</label><input id="addrLine1" required></div>
+            <div class="field"><label>Landmark (optional)</label><input id="addrLandmark"></div>
+            <div class="field-row">
+              <div class="field"><label>City</label><input id="addrCity" required></div>
+              <div class="field"><label>State</label><input id="addrState" required></div>
+            </div>
+            <div class="field"><label>Pincode</label><input id="addrPincode" maxlength="6" required></div>
+          </div>
+
+          <div class="co-block" id="freebieSection" style="display:none;">
+            <h3>Choose your FREE gift 🎁</h3>
+            <p style="font-size:12.8px; color:#8a8074; margin-bottom:6px;">Complimentary with your bouquet</p>
+            <div id="freebieOptions"></div>
+          </div>
+
+          <div class="co-block">
+            <div class="prepaid-note">🔒 We currently accept prepaid orders only. Cash on Delivery is not available.</div>
+          </div>
+        </form>
+      </div>
+
+      <!-- RIGHT: order summary + payment -->
+      <div>
+        <div class="co-block">
+          <h3>Have a coupon code?</h3>
+          <div class="coupon-row">
+            <input id="couponInput" placeholder="e.g. WELCOME10">
+            <button type="button" id="applyCouponBtn">Apply</button>
+          </div>
+          <div id="couponError"></div>
+          <div id="appliedCouponBox"><span id="appliedCouponCode"></span><button type="button" id="removeCouponBtn">Remove</button></div>
+        </div>
+
+        <div class="co-block">
+          <h3>Your order</h3>
+          <div id="summaryItems"></div>
+          <div class="sum-row"><span>Subtotal</span><span id="summarySubtotal">₹0</span></div>
+          <div id="summaryDiscountRow"><span id="summaryDiscountLabel">Coupon</span><span id="summaryDiscount"></span></div>
+          <div id="summaryFreebieRow"><span>Free gift</span><span id="summaryFreebieName"></span></div>
+          <div class="sum-row"><span>Delivery</span><span id="summaryDelivery">₹0</span></div>
+          <div class="sum-total-row"><span>Total</span><span id="summaryTotal">₹0</span></div>
+
+          <button type="submit" form="checkoutForm" class="btn btn-primary" id="payButton">Pay Securely</button>
+          <div id="checkoutFormError"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CONFIRMATION VIEW ============ -->
+<div class="view" id="view-confirmation"></div>
+
+<!-- ============ CART DRAWER (available on every view) ============ -->
+<div id="cartOverlay"></div>
+<div id="cartDrawer">
+  <div class="cart-head"><h3>Your Cart</h3><button id="cartClose">×</button></div>
+  <div id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="cart-sub-row"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+    <button class="btn btn-primary" id="goToCheckout" disabled>Proceed to Checkout</button>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <div class="brand" style="margin-bottom:6px;"><span class="dot"></span>Tendril &amp; Twine</div>
+        <p style="max-width:220px;">Handmade blooms. Forever yours.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Shop</h4>
+        <a href="#home">All bouquets</a>
+        <a href="#faq">FAQ</a>
+        <a href="pages/care-guide.html">Care guide</a>
+      </div>
+      <div class="foot-col">
+        <h4>Support</h4>
+        <a class="js-whatsapp-support" target="_blank" rel="noopener">Chat with us</a>
+        <p>Customer care: <span id="footCareNumber">coming soon</span></p>
+        <a class="js-instagram-link" target="_blank" rel="noopener">Follow on Instagram →</a>
+      </div>
+      <div class="foot-col">
+        <h4>Policies</h4>
+        <a href="pages/privacy.html">Privacy Policy</a>
+        <a href="pages/terms.html">Terms &amp; Conditions</a>
+        <a href="pages/shipping.html">Shipping Policy</a>
+        <a href="pages/refund.html">Refund &amp; Cancellation</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Tendril &amp; Twine. All rights reserved.</span>
+      <span>Prepaid orders only · Delhi NCR</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

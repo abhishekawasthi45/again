@@ -1,0 +1,7 @@
+[
+  { "id": "freebie-sunflower-keychain", "name": "Sunflower Crochet Keychain", "emoji": "🌻", "available": true },
+  { "id": "freebie-flower-keychain", "name": "Flower Crochet Keychain", "emoji": "🌸", "available": true },
+  { "id": "freebie-superhero-keychain", "name": "Superhero-Inspired Crochet Keychain", "emoji": "🦸", "available": true },
+  { "id": "freebie-tulip-keychain", "name": "Tulip Crochet Keychain", "emoji": "🌷", "available": true },
+  { "id": "freebie-mini-charm", "name": "Cute Mini Crochet Charm", "emoji": "🐻", "available": true }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "code": "WELCOME10",
+    "description": "10% off your first order",
+    "type": "percent",
+    "value": 10,
+    "maxDiscountInr": 200,
+    "minOrderValueInr": 0,
+    "active": true,
+    "firstOrderOnly": true
+  },
+  {
+    "code": "BLOOM50",
+    "description": "Flat ₹50 off launch offer",
+    "type": "flat",
+    "value": 50,
+    "maxDiscountInr": 50,
+    "minOrderValueInr": 999,
+    "active": true,
+    "firstOrderOnly": false
+  }
+]

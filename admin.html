@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Tendril & Twine</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@560;650&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  body{padding:30px;}
+  .admin-wrap{max-width:1100px; margin:0 auto;}
+  .token-row{display:flex; gap:10px; margin-bottom:24px;}
+  .token-row input{flex:1; padding:11px 13px; border-radius:9px; border:1px solid var(--line); font-size:14px;}
+  .token-row button{background:var(--plum-2); color:var(--cream); border:none; padding:0 20px; border-radius:9px; font-weight:600;}
+  table{width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+  th,td{padding:11px 12px; text-align:left; font-size:13px; border-bottom:1px solid var(--line);}
+  th{background:var(--cream-2); font-weight:650;}
+  select{padding:6px 8px; border-radius:6px; border:1px solid var(--line); font-size:12.5px;}
+  .status-paid{color:var(--success); font-weight:600;}
+  .status-pending, .status-payment_initiated{color:#a67c1c; font-weight:600;}
+  .status-payment_failed, .status-cancelled{color:var(--danger); font-weight:600;}
+  #err{color:var(--danger); font-size:13px; margin-bottom:14px;}
+</style>
+</head>
+<body>
+<div class="admin-wrap">
+  <h1 style="margin-bottom:6px;">Order Management</h1>
+  <p style="color:#8a8074; font-size:13.5px; margin-bottom:20px;">Paste your ADMIN_TOKEN (from backend/.env) to view live orders. This token never leaves your browser except to call your own backend.</p>
+
+  <div class="token-row">
+    <input id="tokenInput" type="password" placeholder="Admin token">
+    <button id="loadBtn">Load Orders</button>
+  </div>
+  <div id="err"></div>
+
+  <table id="ordersTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>Order ID</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th>
+        <th>Payment</th><th>Status</th><th>Update</th>
+      </tr>
+    </thead>
+    <tbody id="ordersBody"></tbody>
+  </table>
+</div>
+
+<script src="js/config.js"></script>
+<script>
+const STATUSES = ["order_received","payment_confirmed","preparing","packed","shipped","delivered","cancelled","refunded"];
+
+async function loadOrders() {
+  const token = document.getElementById('tokenInput').value.trim();
+  const errBox = document.getElementById('err');
+  errBox.textContent = '';
+  if (!token) { errBox.textContent = 'Enter the admin token first.'; return; }
+
+  try {
+    const res = await fetch(`${APP_CONFIG.API_BASE_URL}/api/admin/orders`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok) { errBox.textContent = data.error || 'Failed to load orders.'; return; }
+    renderOrders(data, token);
+  } catch (e) {
+    errBox.textContent = `Could not reach backend at ${APP_CONFIG.API_BASE_URL}. Is it running?`;
+  }
+}
+
+function renderOrders(orders, token) {
+  const tbody = document.getElementById('ordersBody');
+  document.getElementById('ordersTable').style.display = orders.length ? 'table' : 'none';
+  if (!orders.length) { document.getElementById('err').textContent = 'No orders yet.'; return; }
+
+  tbody.innerHTML = orders.map(o => `
+    <tr>
+      <td><strong>${o.id}</strong></td>
+      <td>${new Date(o.createdAt).toLocaleDateString('en-IN')}</td>
+      <td>${o.customer ? o.customer.name + '<br><span style="color:#8a8074">' + o.customer.mobile + '</span>' : '—'}</td>
+      <td>${(o.items||[]).map(i => `${i.name} ×${i.quantity}`).join('<br>')}</td>
+      <td>₹${o.total}</td>
+      <td class="status-${o.paymentStatus}">${o.paymentStatus}</td>
+      <td>
+        <select data-id="${o.id}" class="statusSelect">
+          ${STATUSES.map(s => `<option value="${s}" ${s === o.orderStatus ? 'selected' : ''}>${s.replace('_',' ')}</option>`).join('')}
+        </select>
+      </td>
+      <td><button data-save="${o.id}">Save</button></td>
+    </tr>
+  `).join('');
+
+  document.querySelectorAll('[data-save]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.save;
+      const select = document.querySelector(`.statusSelect[data-id="${id}"]`);
+      await fetch(`${APP_CONFIG.API_BASE_URL}/api/admin/orders/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ orderStatus: select.value })
+      });
+      btn.textContent = 'Saved ✓';
+      setTimeout(() => btn.textContent = 'Save', 1200);
+    });
+  });
+}
+
+document.getElementById('loadBtn').addEventListener('click', loadOrders);
+</script>
+</body>
+</html>
